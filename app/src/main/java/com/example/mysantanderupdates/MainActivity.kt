@@ -6,15 +6,15 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.runtime.*
+
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,28 +44,46 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BikeStationsScreen() {
     val bikeStations = remember { mutableStateListOf<BikeStation>() }
+    val filteredStations = remember { mutableStateListOf<BikeStation>() }
+    var searchQuery by remember { mutableStateOf("") }  // Corrected here
 
     suspend fun reloadData() {
         val stations = fetchBikeStations()
         bikeStations.clear()
         bikeStations.addAll(stations)
+        filteredStations.clear()
+        filteredStations.addAll(stations)
         Log.d("Reload", "Reloaded ${bikeStations.size} stations")
     }
 
     LaunchedEffect(Unit) { reloadData() }
 
+    // Update filtered list based on the search query
+    val filteredList = filteredStations.filter { station ->
+        station.name.contains(searchQuery, ignoreCase = true)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("MySantanderUpdates") },
+                title = {},
                 actions = {
                     IconButton(onClick = { CoroutineScope(Dispatchers.IO).launch { reloadData() } }) {
                         Icon(Icons.Default.Refresh, contentDescription = "Reload Data")
                     }
+                    // Search bar in the app bar
+                    TextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        label = { Text("Search") },
+                        modifier = Modifier.padding(end = 8.dp),
+                        colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
+                    )
                 }
             )
         }
@@ -76,11 +94,11 @@ fun BikeStationsScreen() {
                 .padding(paddingValues) // Ensure content doesn't overlap with the app bar
                 .padding(16.dp)
         ) {
-            if (bikeStations.isEmpty()) {
+            if (filteredList.isEmpty()) {
                 Text("No bike stations found or failed to fetch data.")
             } else {
                 LazyColumn {
-                    items(bikeStations) { station ->
+                    items(filteredList) { station ->
                         StationItem(station)
                     }
                 }
