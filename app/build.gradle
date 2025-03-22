@@ -41,7 +41,7 @@ dependencies {
     implementation libs.androidx.core.ktx.v1100
     implementation libs.androidx.appcompat
     implementation libs.androidx.constraintlayout
-    implementation libs.androidx.lifecycle.runtime.ktx.v251
+    implementation libs.androidx.lifecycle.runtime.ktx
 
     implementation libs.ui
     implementation libs.material3
