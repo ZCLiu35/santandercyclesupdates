@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.example.mysantanderupdates'
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.example.mysantanderupdates"
         minSdk 21
@@ -41,7 +41,7 @@ dependencies {
     implementation libs.androidx.core.ktx.v1100
     implementation libs.androidx.appcompat
     implementation libs.androidx.constraintlayout
-    implementation libs.androidx.lifecycle.runtime.ktx
+//    implementation libs.androidx.lifecycle.runtime.ktx
 
     implementation libs.ui
     implementation libs.material3
