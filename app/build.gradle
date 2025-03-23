@@ -41,9 +41,13 @@ dependencies {
     implementation libs.androidx.core.ktx.v1100
     implementation libs.androidx.appcompat
     implementation libs.androidx.constraintlayout
-//    implementation libs.androidx.lifecycle.runtime.ktx
 
     implementation libs.ui
     implementation libs.material3
     implementation libs.androidx.activity.compose.v150
+
+    // Needed for location access
+    implementation libs.play.services.location
+    implementation libs.androidx.activity.ktx
+    implementation libs.accompanist.permissions
 }
