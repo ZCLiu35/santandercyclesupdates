@@ -16,7 +16,7 @@ data class BikeStation(
     var name: String = "",
     var terminalName: String = "",
     var lat: Double = 0.0,
-    var long: Double = 0.0,
+    var lon: Double = 0.0,
     var installed: Boolean = false,
     var locked: Boolean = false,
     var installDate: Long = 0L,
@@ -70,7 +70,7 @@ fun parseXml(xml: String?): List<BikeStation> {
                     "name" -> currentStation?.name = parser.nextText()
                     "terminalName" -> currentStation?.terminalName = parser.nextText()
                     "lat" -> currentStation?.lat = parser.nextText().toDouble()
-                    "long" -> currentStation?.long = parser.nextText().toDouble()
+                    "long" -> currentStation?.lon = parser.nextText().toDouble()
                     "installed" -> currentStation?.installed = parser.nextText().toBoolean()
                     "locked" -> currentStation?.locked = parser.nextText().toBoolean()
                     "installDate" -> currentStation?.installDate = parser.nextText().toLongOrDefault(0L)
