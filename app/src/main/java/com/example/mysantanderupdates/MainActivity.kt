@@ -156,9 +156,9 @@ fun BikeStationsScreen() {
                             // Request location updates
                             val locationRequest = LocationRequest.create().apply {
                                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                                numUpdates = 2
+                                numUpdates = 1
                                 interval = 10000 // 10 seconds
-                                fastestInterval = 1000 // 5 seconds
+                                fastestInterval = 1000 // 1 second
                             }
 
                             fusedLocationClient.requestLocationUpdates(
@@ -209,12 +209,12 @@ fun BikeStationsScreen() {
         }
     }
 
-    // Cleanup location updates when component is disposed
-    DisposableEffect(Unit) {
-        onDispose {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
-        }
-    }
+//    // Cleanup location updates when component is disposed
+//    DisposableEffect(Unit) {
+//        onDispose {
+//            fusedLocationClient.removeLocationUpdates(locationCallback)
+//        }
+//    }
 
     // LaunchedEffect to fetch bike stations
     LaunchedEffect(shouldRefresh) {
@@ -224,7 +224,7 @@ fun BikeStationsScreen() {
                 val stations = fetchBikeStations()
                 bikeStations.clear()
                 bikeStations.addAll(stations)
-                Log.d("BikeStations", "Displayed ${stations.size} stations")
+                Log.d("BikeStations", "Displayed ${stations.size} stations near ${currentLocation?.latitude}, ${currentLocation?.longitude}")
             } catch (e: Exception) {
                 Log.e("BikeStations", "Error fetching bike stations: ${e.message}")
                 Toast.makeText(context, "Failed to fetch bike stations", Toast.LENGTH_SHORT).show()
@@ -237,12 +237,14 @@ fun BikeStationsScreen() {
 
     // Function to trigger refresh
     val refreshBikeStations: () -> Unit = {
+        Log.d("RefreshStations", "Refresh Triggered!")
         shouldRefresh = true
         shouldUpdateLocation = true
     }
 
     // Sorting the bike stations based on distance from current location
     val sortedStations = remember(currentLocation, bikeStations) {
+        Log.d("SortStations", "Sorting...")
         if (currentLocation != null) {
             bikeStations.sortedBy { station ->
                 calculateDistance(
